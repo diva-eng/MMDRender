@@ -3,7 +3,7 @@
 #import "MMD_Render_DMPlugIn.h"
 
 #define	kQCPlugIn_Name				@"MMDRender"
-#define	kQCPlugIn_Description		@"PMD Render b119 / VMD Player using Quartz Composer"
+#define	kQCPlugIn_Description		@"PMD Render b120 / VMD Player using Quartz Composer"
 
 @implementation MMD_Render_DMPlugIn
 
@@ -263,7 +263,7 @@
          * Reason: messy code, branched motion to another method
          */
 		if (vmdfilepath != nil) {
-            [self loadMotion:vmdfilepath pmd:pmdfilepath loop:NO];
+            [self loadMotion:vmdfilepath pmd:pmdfilepath loop:YES];
 //			g_clVMDMotion.load( [vmdfilepath cStringUsingEncoding:NSUTF8StringEncoding] );
 //			g_clPMDModel.setMotion( &g_clVMDMotion, [loopFlag boolValue]?true:false );
 		}
@@ -429,7 +429,8 @@
     }
     if([self.vmdFilepath_curr isEqualToString:self.vmdFilepath] == NO)
     {
-        [self loadMotion:self.vmdFilepath pmd:self.pmdFilepath loop:NO];
+        NSLog(@"=====Loading new motion=====");
+        [self loadMotion:self.vmdFilepath pmd:self.pmdFilepath loop:YES];
     }
     
 	if(loadedFlag)
