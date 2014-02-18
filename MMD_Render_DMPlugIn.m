@@ -3,7 +3,7 @@
 #import "MMD_Render_DMPlugIn.h"
 
 #define	kQCPlugIn_Name				@"MMDRender"
-#define	kQCPlugIn_Description		@"PMD Render b120 / VMD Player using Quartz Composer"
+#define	kQCPlugIn_Description		@"PMD Render b123 / VMD Player using Quartz Composer"
 
 @implementation MMD_Render_DMPlugIn
 
@@ -263,7 +263,7 @@
          * Reason: messy code, branched motion to another method
          */
 		if (vmdfilepath != nil) {
-            [self loadMotion:vmdfilepath pmd:pmdfilepath loop:YES];
+            [self loadMotion:vmdfilepath loop:YES];
 //			g_clVMDMotion.load( [vmdfilepath cStringUsingEncoding:NSUTF8StringEncoding] );
 //			g_clPMDModel.setMotion( &g_clVMDMotion, [loopFlag boolValue]?true:false );
 		}
@@ -281,9 +281,10 @@
 	
 	return (error ? NO : YES);
 }
-- (void) loadMotion: (NSString*)vmdfilepath pmd: (NSString*) pmdfilepath loop:(BOOL)loopFlag
+- (void) loadMotion: (NSString*)vmdfilepath loop:(BOOL)loopFlag
 {
     if (vmdfilepath != nil) {
+        NSLog(@"Loading %@", vmdfilepath);
         g_clVMDMotion.load( [vmdfilepath cStringUsingEncoding:NSUTF8StringEncoding] );
         g_clPMDModel.setMotion( &g_clVMDMotion, loopFlag?true:false );
         self.vmdFilepath_curr= vmdfilepath;
@@ -430,7 +431,15 @@
     if([self.vmdFilepath_curr isEqualToString:self.vmdFilepath] == NO)
     {
         NSLog(@"=====Loading new motion=====");
-        [self loadMotion:self.vmdFilepath pmd:self.pmdFilepath loop:YES];
+        [self loadDataWithContext:context];
+        //[self loadMotion:self.vmdFilepath loop:YES];
+        g_clPMDModel.clearCurrentFrame();
+        g_clPMDModel.enablePhysics(false);
+        g_clPMDModel.resetRigidBodyPos();
+        g_clPMDModel.updateMotion( 0.0f );
+        g_clPMDModel.updateSkinning();
+        noPhysicsFlag= YES;
+
     }
     
 	if(loadedFlag)
