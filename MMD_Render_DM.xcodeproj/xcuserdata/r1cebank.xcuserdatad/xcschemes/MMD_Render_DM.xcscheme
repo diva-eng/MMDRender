@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "8D5B49AC048680CD000E48DA"
-               BuildableName = "MMD_Render_DM.plugin"
+               BuildableName = "MMDRender.plugin"
                BlueprintName = "MMD_Render_DM"
                ReferencedContainer = "container:MMD_Render_DM.xcodeproj">
             </BuildableReference>

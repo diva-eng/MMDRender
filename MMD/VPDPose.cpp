@@ -31,7 +31,12 @@ bool cVPDPose::load( const char *szFilePath )
 	FILE	*pFile;
 
 	//if (_wfopen_s( &pFile, wszFilePath, L"rt" )) {
-	if (pFile= fopen( szFilePath, "rt" )) {
+    /*
+     * Updated by: r1cebank
+     * Reason: assignment without a (
+     * if (pFile= fopen( szFilePath, "rt" ))
+     */
+	if ((pFile= fopen( szFilePath, "rt" ))) {
 		return false;	// ファイルが開けない
 	}
 

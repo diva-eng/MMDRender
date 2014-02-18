@@ -155,21 +155,33 @@
 	int state= NSCancelButton;
 	NSFileManager *mgr = [NSFileManager defaultManager];
 	if ([mgr fileExistsAtPath:self.pmdFilepath_curr]) {
-        [opanel setDirectoryURL:[NSURL URLWithString: [self.pmdFilepath_curr stringByDeletingLastPathComponent]]];
-        [opanel setAllowedFileTypes:fileTypes];
-        state = [opanel runModal];
         /*
          * Removed by: r1cebank
          * Updated by: r1cebank
          * Reason: deprecated method in 10.6
         */
 		//state= [opanel runModalForDirectory:[self.pmdFilepath_curr stringByDeletingLastPathComponent] file:[self.pmdFilepath_curr lastPathComponent]types:fileTypes];
+        [opanel setDirectoryURL:[NSURL URLWithString: [self.pmdFilepath_curr stringByDeletingLastPathComponent]]];
+        [opanel setAllowedFileTypes:fileTypes];
+        state = [opanel runModal];
 	}
 	else {
+        /*
+         * Removed by: r1cebank
+         * Updated by: r1cebank
+         * Reason: deprecated method in 10.6
+         */
+        //[opanel runModalForTypes: fileTypes];
         [opanel setAllowedFileTypes:fileTypes];
 	}
 	if (state == NSOKButton){
-		self.pmdFilepath= [opanel filename];
+        /*
+         * Removed by: r1cebank
+         * Updated by: r1cebank
+         * Reason: deprecated method in 10.6
+         */
+        //self.pmdFilepath= [opanel filename];
+		self.pmdFilepath= [[opanel URL] absoluteString];
 		loadedFlag= NO;
 	}
 }
@@ -181,15 +193,33 @@
 	int state= NSCancelButton;
 	NSFileManager *mgr = [NSFileManager defaultManager];
 	if ([mgr fileExistsAtPath:self.vmdFilepath_curr]) {
-		state= [opanel runModalForDirectory:[self.vmdFilepath_curr stringByDeletingLastPathComponent] 
-									   file:[self.vmdFilepath_curr lastPathComponent]
-									  types:fileTypes];
+        /*
+         * Removed by: r1cebank
+         * Updated by: r1cebank
+         * Reason: deprecated method in 10.6
+         */
+		//state= [opanel runModalForDirectory:[self.vmdFilepath_curr stringByDeletingLastPathComponent] file:[self.vmdFilepath_curr lastPathComponent] types:fileTypes];
+        [opanel setDirectoryURL:[NSURL URLWithString: [self.vmdFilepath_curr stringByDeletingLastPathComponent]]];
+        [opanel setAllowedFileTypes:fileTypes];
+        state = [opanel runModal];
 	}
 	else {
+        /*
+         * Removed by: r1cebank
+         * Updated by: r1cebank
+         * Reason: deprecated method in 10.6
+         */
+        //[opanel runModalForTypes: fileTypes];
 		[opanel setAllowedFileTypes:fileTypes];
 	}
 	if (state == NSOKButton){
-		self.vmdFilepath= [opanel filename];
+        /*
+         * Removed by: r1cebank
+         * Updated by: r1cebank
+         * Reason: deprecated method in 10.6
+         */
+		//self.vmdFilepath= [opanel filename];
+        self.vmdFilepath= [[opanel URL] absoluteString];
 		loadedFlag= NO;
 	}
 }
@@ -225,7 +255,12 @@
 		loadedFlag= YES;
 	}
 	GLenum error;
-	if(error = glGetError())
+    /*
+     * Updated by: r1cebank
+     * Reason: assignment without a (
+     * if(error = glGetError())
+     */
+	if((error = glGetError()))
 		[context logMessage:@"OpenGL error %04X", error];
 	
 	return (error ? NO : YES);
@@ -299,7 +334,12 @@
 	{
 	}
 	GLenum error;
-	if(error = glGetError())
+    /*
+     * Updated by: r1cebank
+     * Reason: assignment without a (
+     * if(error = glGetError())
+     */
+	if((error = glGetError()))
         [context logMessage:@"OpenGL error %04X", error];
 	return (error ? NO : YES);
 }
@@ -423,7 +463,12 @@
 		glMatrixMode(saveMode);
 	}
 	GLenum error;
-	if(error = glGetError())
+    /*
+     * Updated by: r1cebank
+     * Reason: assignment without a (
+     * if(error = glGetError())
+     */
+	if((error = glGetError()))
 		[context logMessage:@"OpenGL error %04X", error];
 	
 	return (error ? NO : YES);
