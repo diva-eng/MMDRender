@@ -1,0 +1,242 @@
+#MMD Render Plugin for Quartz Composer
+
+####Project History
+MMD Render based on ARTK_MMD v0.3 (no bullet) using MMD with augumented reality applications.
+This project will use the same open source license as the original license. GPL v2
+
+**Limitation**:
+
+no editing, plain pmd, vmd loading.
+
+**Platform**: 
+
+	MacOS SDK 10.9
+	Xcode 5
+	Quartz Composer 4.6
+**Dependencies**
+	
+	bullet @2.80-2527_0
+	(You can find in Macports)
+	(Latest bullet is not supported currently)
+**How to use this project**
+
+Download this project, open the Xcode project and build the target "Build & Copy" The plugin will be built in your platform. ***If you encounter error saying target platform is not avaliable, you might have to change the target from the project build settings***
+
+#####Original EULA (Japanese)
+本プログラムは、ru11en様の「MMD_DesktopMascot v0.4.9」を元にしています。
+http://r13n.spaces.live.com
+http://ru11en.wordpress.com/2010/01/20/mmd_desktopmascot-v0-4-9/
+
+上記プログラムは、PY 様の「ARTK_MMD v0.7」を元にしています。
+http://ppyy.hp.infoseek.co.jp/artk_mmd.html
+(現在はこちら http://ppyy.if.land.to/artk_mmd.html )
+
+ライセンスはそれらより引き継ぎ、GPL v2 の下で公開致します。
+
+配布内容に問題が在る場合はご連絡ください．
+連絡先 : pg.twitter at gmail.com
+
+このプログラムを使用したことによる、直接あるいは間接的損害に関しての一切の責任を負いかねますのでご了承下さい．
+
+ーーーー
+Bulletphysics関連は別途ご用意ください．
+Bulletphysics関連のdylib(LinearMath, BulletCollision, BulletDynamics, BulletSoftBody)は/opt/local/lib(MacPortsのデフォルト)にあることを前提としています．適宜変更ください．
+
+=====================================================================
+
+  MMD_DesktopMascot Ver.0.4.9
+  - MMD_デスクトップマスコット -
+
+  MikuMikuDance用のモデル(PMD)をデスクトップマスコット風に表示し、
+  モーション(VMD)またはポーズ(VPD)を再生します。
+
+  Copyright (C) 2009  Ru--en
+
+    サイト: http://r13n.spaces.live.com
+    連絡先: ru-en@live.jp
+
+
+  本プログラムは、PY 様の「ARTK_MMD v0.7」を元にしています。
+  「ARTK_MMD」 http://ppyy.hp.infoseek.co.jp/artk_mmd.html
+  ライセンスはそれより引き継ぎ、GPL v2 の下で公開致します。
+
+  ただし、内部で使用している「Bullet」ライブラリは ZLib ライセンスであり、
+  そのオリジナルは http://www.bulletphysics.com/ にて入手可能です。
+
+=====================================================================
+
+
+動作の様子などはこちらをご覧下さい。
+http://www.youtube.com/watch?v=P2ML3PJZWMg
+http://www.nicovideo.jp/watch/sm7490100
+
+
+●動作環境
+    Windows XP, Vista, 7
+
+    「Microsoft Visual C++ 2008 SP1 再頒布可能パッケージ」が必要かも知れません。
+    動作しなかった場合は Microsoft のサイトから取得・インストール後、試してみてください。
+    お使いの Windows が32ビット版の場合、以下のリンクをご覧下さい。
+    http://www.microsoft.com/Downloads/details.aspx?displaylang=ja&FamilyID=a5c84275-3b97-4ab7-a40d-3802b2af5fc2
+
+    Microsoftによるソフトウェア実装のOpenGLが使われるので、ビデオボードの性能はあまり関係ないはずです。
+    その代わり、ある程度以上のCPU性能が必要です。
+
+
+●内容物
+    MMD_DM.exe          本体
+    readme.txt          この説明書
+    COPYING.txt         GNU 一般公衆利用許諾契約書
+    BulletLicense.txt   物理演算エンジンBulletのライセンス
+    
+    ※PMDモデル、VMDモーションデータは同梱しておりません。
+    まずは MikuMikuDance (Multi-Model Edition)をご覧頂くことをお勧めします。
+    http://www.geocities.jp/higuchuu4/index.htm
+    
+    また、こちらのサイトからモデルやモーション等を探すことができます。
+    http://www6.atwiki.jp/vpvpwiki/pages/1.html
+
+
+●インストール
+    適当なフォルダにファイルを展開して頂けばOKです。
+    レジストリは使用していません。
+
+
+●アンインストール
+    展開したファイルを削除すればOKです。
+    レジストリは使用していません。
+
+
+●使用方法
+    単に MMD_DM.exe を実行すると、PMD読込画面になります。
+    適当なPMDファイルを開くと、表示されます。
+    （PMDファイルをドロップした場合や、コマンドラインで指定した場合は、読込画面は表示されません）
+    
+    【キー操作】
+    [O]                 モデルファイル読込
+    [M]                 モーションファイル読込
+    [L]                 マウスカーソル目線 On/Off
+    [T]                 最前面に表示 On/Off
+    [B]                 物理演算 On/Off
+    [W]                 ウィンドウ自動移動 On/Off
+    [F]                 FPS表示 On/Off
+    [+]                 拡大
+    [-]                 縮小
+    [Ctrl]+[0]          元のサイズに戻す
+    [Ctrl]+[1]          50%サイズに縮小
+    [Ctrl]+[2]          200%サイズに拡大
+    [←][→][↑][↓]    モデルを回転
+    [Shift]+[←]～[↓]  モデルを（描画範囲内で）移動
+    [Ctrl]+[Shift]+[N]  回転と移動をリセット
+    [Alt]+[?]           バージョン情報
+    [Alt]+[F4]          終了
+    
+
+    【右クリックメニュー】
+    上のキー操作に無いものだけ説明します。
+
+    「ポーズを残す」    Onだと、VPDファイル読込時に、ファイルに書かれたボーンの分だけ反映させます。
+                        例えば、足だけのポーズ、手だけのポーズを順番に読み込むと、両方合わせた姿勢になります。
+                        Offだと、読込時に全身のポーズをリセットします。
+
+    「FPS制限」         描画頻度に制限をかけます。初期値は60fpsです。
+                        必ずしもこのFPSで描画されるわけではなく、超えないようにするだけです。
+                        少なくするとCPU負荷が減ります。
+
+    「ウィンドウサイズ」描画範囲の大きさを変えます。初期値は400x400ピクセルです。(Ver.0.4.7以前は600x600)
+
+
+    【ファイルのドラッグ＆ドロップ】
+    PMD, VMD, VPD ファイルをドラッグ＆ドロップできます。
+    隠し機能として、MP3, WAV, WMA をドロップするとモーションと同時に再生します。
+    ただしおまけ機能なので音量調整や停止などの再生制御はありません。
+    音量にはお気を付け下さい。
+
+
+●コマンドライン引数
+    コマンドライン引数でも PMD, VMD, VPD, MP3, WAV, WMA ファイルを渡すことができます。
+    ただしPMDファイルが無いと、他の種類のファイルは無効になります。
+    PMDファイルを指定した場合、ファイルを開くダイアログは表示せず起動します。
+    また、以下のオプションがあります。
+
+    【コマンドラインオプション】
+    -F0 または -F1      FPS表示のOn/Off。           「-F0」だとOff,「-F1」だとOnにします。デフォルトはOffです。
+    -T0 または -T1      最前面表示のOn/Off。        「-T0」だとOff,「-T1」だとOnにします。デフォルトはOffです。
+    -L0 または -L1      カーソル目線のOn/Off。      「-L0」だとOff,「-L1」だとOnにします。デフォルトはOffです。
+    -B0 または -B1      物理演算のOn/Off。          「-B0」だとOff,「-B1」だとOnにします。デフォルトはOffです。
+    -W0 または -W1      ウィンドウ自動移動のOn/Off。「-W0」だとOff,「-W1」だとOnにします。デフォルトはOnです。
+
+    【コマンドラインオプションの仕様】
+    ハイフン「-」または スラッシュ「/」で始まる引数はオプションと解釈されます。
+    以下ではハイフンで説明してありますが、スラッシュでも同じ動作になります。
+    英字の大文字小文字は区別されません。
+
+    コマンドライン引数の指定例
+        > MMD_DM.exe -B1 "..\MikuMikuDance\UserFile\Model\初音ミク.pmd" "umauma.vmd"
+
+
+●免責
+    このプログラムを使用したことによる、直接的あるいは間接的損害に関しての
+    一切の責任を負いかねますのでご了承ください
+
+
+●謝辞
+    ARTK_MMD のソースを公開してくださった PY 様、
+    MMD を作成してくださった 樋口Mに感謝致します。
+
+
+●再配布・改変について
+    下にも記述がありますが、GPL v2 またはそれ以降に則った上で
+    商用・非商用に関わらず再頒布・改変を自由に行っていただいてかまいません。
+    特に連絡していただく必要はありません。
+    （けれども何らかのコメントをいただけると、作者が喜びます）
+
+
+●ソースコード
+    本プログラムのソースコードは http://r13n.spaces.live.com/ にて入手可能です。
+
+    元となっている「ARTK_MMD」は http://ppyy.hp.infoseek.co.jp/ にて公開されています。
+    利用している「Bullet」は http://www.bulletphysics.com/ にて公開されています。
+
+    本プログラムの開発には Microsoft Visual C++ 2008 を使用しました。
+
+
+●更新履歴
+    2010/01/20 Ver.0.4.9    ウィンドウ追従時に奥行きは残すように修正
+    2010/01/14 Ver.0.4.8    センターボーンに合わせたウィンドウ移動を実装、メニューの２カ国語化
+    2010/01/07 Ver.0.4.7    輪郭・影無し材質に対応、読込時エラー修正
+    2010/01/06 Ver.0.4.6    MMD v5.12以降のスフィアマップ指定に部分対応
+                            ただしテクスチャとスフィアマップ同時使用不可。加算も不可
+    2009/10/18 Ver.0.4.5    Bullet 2.75 を使用、コマンドライン引数対応修正
+                            ・常に最前面表示はコマンドラインで設定できるようにしたため、
+                              デフォルトでOffにしました
+                            ・アイコンを変更しました
+
+    2009/08/31 Ver.0.4.4    ARTK_MMD v0.7を取り入れ（スフィアマップ対応）
+    2009/08/30 Ver.0.4.3    色々調整、VPD読込対応
+    2009/08/07 Ver.0.4.2    モーションは常に60fpsで計算させた
+    2009/08/03 Ver.0.4.1    物理演算関連調整
+    2009/08/02 Ver.0.4.0    ARTK_MMD v0.5を取り入れ
+    2009/07/15 Ver.0.3.7    ファイルドロップ対応、BGM再生、
+                            タスクバー右クリック対応、コマンドライン対応
+    2009/07/13 Ver.0.3.6    サイズ変更修正、ファイル名のワイド文字化、
+                            メニュー英語化、マウス目線修正
+    2009/07/13 Ver.0.3.5    再生速度修正、キャンバスサイズ変更追加
+    2009/07/09 Ver.0.3.4    テクスチャ読込修正
+    2009/07/08 Ver.0.3.3    FPS制限の10FPSが機能してなかったのを修正
+    2009/07/08 Ver.0.3.2    FPS制限と追加
+    2009/07/01 Ver.0.3.1    回転と移動を追加、ソース公開用に整理
+    2009/06/30 Ver.0.3.0    外部向け初回公開
+
+
+---------------------------------------------------------------------------------------
+このプログラムはフリーソフトウェアです。あなたはこれを、フリーソフトウェア財団に
+よって発行された GNU 一般公衆利用許諾契約書(バージョン2か、希望によってはそれ以降の
+バージョンのうちどれか)の定める条件の下で再頒布または改変することができます。
+
+このプログラムは有用であることを願って頒布されますが、*全くの無保証* です。
+商業可能性の保証や特定の目的への適合性は、言外に示されたものも含め全く存在しません。
+詳しくはGNU 一般公衆利用許諾契約書をご覧ください。
+ 
+GNU 一般公衆利用許諾契約書の複製物はファイル COPYING.txt として同梱されています。
+---------------------------------------------------------------------------------------
