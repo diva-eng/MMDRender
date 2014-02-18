@@ -3,7 +3,7 @@
 #import "MMD_Render_DMPlugIn.h"
 
 #define	kQCPlugIn_Name				@"MMDRender"
-#define	kQCPlugIn_Description		@"PMD Render b117 / VMD Player using Quartz Composer"
+#define	kQCPlugIn_Description		@"PMD Render b119 / VMD Player using Quartz Composer"
 
 @implementation MMD_Render_DMPlugIn
 
@@ -255,13 +255,17 @@
 		}
 		
 		self.pmdFilepath_curr= pmdfilepath;
-		self.vmdFilepath_curr= vmdfilepath;
 		
 		g_clPMDModel.setQCPlugInContext( context );
 		g_clPMDModel.load( [pmdfilepath cStringUsingEncoding:NSUTF8StringEncoding] );
+        /*
+         * Commented by: r1cebank
+         * Reason: messy code, branched motion to another method
+         */
 		if (vmdfilepath != nil) {
-			g_clVMDMotion.load( [vmdfilepath cStringUsingEncoding:NSUTF8StringEncoding] );
-			g_clPMDModel.setMotion( &g_clVMDMotion, [loopFlag boolValue]?true:false );
+            [self loadMotion:vmdfilepath pmd:pmdfilepath loop:NO];
+//			g_clVMDMotion.load( [vmdfilepath cStringUsingEncoding:NSUTF8StringEncoding] );
+//			g_clPMDModel.setMotion( &g_clVMDMotion, [loopFlag boolValue]?true:false );
 		}
 		
 		loadedFlag= YES;
@@ -276,6 +280,14 @@
 		[context logMessage:@"OpenGL error %04X", error];
 	
 	return (error ? NO : YES);
+}
+- (void) loadMotion: (NSString*)vmdfilepath pmd: (NSString*) pmdfilepath loop:(BOOL)loopFlag
+{
+    if (vmdfilepath != nil) {
+        g_clVMDMotion.load( [vmdfilepath cStringUsingEncoding:NSUTF8StringEncoding] );
+        g_clPMDModel.setMotion( &g_clVMDMotion, loopFlag?true:false );
+        self.vmdFilepath_curr= vmdfilepath;
+    }
 }
 - (BOOL) loadDataWithContext:(id<QCPlugInContext>)context
 {
@@ -347,6 +359,10 @@
 #pragma mark ---
 - (BOOL) startExecution:(id<QCPlugInContext>)context
 {
+    /*
+     * Updated by: r1cebank
+     * Reason: data initialization
+     */
 	CGLContextObj cgl_ctx = [context CGLContextObj]; 
 	if(cgl_ctx == NULL) 
 		return NO; 
@@ -395,12 +411,13 @@
 //        g_clPMDModel.updateSkinning();
 //		noPhysicsFlag= YES;
 //	}
-    if([self.pmdFilepath_curr isEqualToString:self.pmdFilepath] == NO ||
-       [self.vmdFilepath_curr isEqualToString:self.vmdFilepath] == NO)
+    if([self.pmdFilepath_curr isEqualToString:self.pmdFilepath] == NO)
     {
         if((self.vmdFilepath != nil) || [self.vmdFilepath length]>0)
         {
             NSLog(@"=====Loading new resources=====");
+            NSLog(@"=====pmd: %@ vmd: %@======", self.pmdFilepath, self.vmdFilepath);
+            NSLog(@"=====pmd_curr: %@ vmd_curr: %@======", self.pmdFilepath_curr, self.vmdFilepath_curr);
             [self loadDataWithContext:context];
             g_clPMDModel.clearCurrentFrame();
             g_clPMDModel.enablePhysics(false);
@@ -409,6 +426,10 @@
             g_clPMDModel.updateSkinning();
             noPhysicsFlag= YES;
         }
+    }
+    if([self.vmdFilepath_curr isEqualToString:self.vmdFilepath] == NO)
+    {
+        [self loadMotion:self.vmdFilepath pmd:self.pmdFilepath loop:NO];
     }
     
 	if(loadedFlag)
