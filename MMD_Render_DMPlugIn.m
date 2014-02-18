@@ -2,8 +2,8 @@
 
 #import "MMD_Render_DMPlugIn.h"
 
-#define	kQCPlugIn_Name				@"MMD_Render_DM"
-#define	kQCPlugIn_Description		@"PMD Render / VMD Player using MMD_DM code"
+#define	kQCPlugIn_Name				@"MMDRender"
+#define	kQCPlugIn_Description		@"PMD Render b117 / VMD Player using Quartz Composer"
 
 @implementation MMD_Render_DMPlugIn
 
@@ -171,17 +171,23 @@
          * Updated by: r1cebank
          * Reason: deprecated method in 10.6
          */
-        //[opanel runModalForTypes: fileTypes];
+        //state= [opanel runModalForTypes: fileTypes];
         [opanel setAllowedFileTypes:fileTypes];
+        state = [opanel runModal];
 	}
-	if (state == NSOKButton){
+    /*
+     * Updated by: r1cebank
+     * Reason: deprecated method in 10.6
+     * Removed NSOKButton
+     */
+	if (state == NSFileHandlingPanelOKButton){
         /*
          * Removed by: r1cebank
          * Updated by: r1cebank
          * Reason: deprecated method in 10.6
          */
         //self.pmdFilepath= [opanel filename];
-		self.pmdFilepath= [[opanel URL] absoluteString];
+		self.pmdFilepath= [[opanel URL] path];
 		loadedFlag= NO;
 	}
 }
@@ -209,17 +215,23 @@
          * Updated by: r1cebank
          * Reason: deprecated method in 10.6
          */
-        //[opanel runModalForTypes: fileTypes];
+        //state= [opanel runModalForTypes: fileTypes];
 		[opanel setAllowedFileTypes:fileTypes];
+        state = [opanel runModal];
 	}
-	if (state == NSOKButton){
+    /*
+     * Updated by: r1cebank
+     * Reason: deprecated method in 10.6
+     * Removed NSOKButton
+     */
+	if (state == NSFileHandlingPanelOKButton){
         /*
          * Removed by: r1cebank
          * Updated by: r1cebank
-         * Reason: deprecated method in 10.6
+         * Reason: deprecated method in 10.6, messy code
          */
 		//self.vmdFilepath= [opanel filename];
-        self.vmdFilepath= [[opanel URL] absoluteString];
+        self.vmdFilepath= [[opanel URL] path];
 		loadedFlag= NO;
 	}
 }
@@ -276,12 +288,14 @@
 								   vmd:self.vmdFilepath
 								  loop:[NSNumber numberWithBool:YES]];
 	if (b) {
+        NSLog(@"=====Setting Faces on the model.=====");
 		[facesArray removeAllObjects];
 		NSUInteger i, ic= g_clPMDModel.getNumberOfFaces();
 		for(i= 0; i<ic; i++) {
 			const char *n= g_clPMDModel.getFaceName(i);
 			NSString *name= [NSString stringWithCString:n encoding:NSShiftJISStringEncoding];
 			[facesArray addObject:name];
+            NSLog(@"=====%@ is added=====", name);
 		}
 		faceTime= 0.0;
 	}
@@ -308,17 +322,22 @@
 }
 - (BOOL)isNeedReloadWithPmd:(NSString *)pmdfilepath
 						vmd:(NSString *)vmdfilepath
-{	
+{
+    NSLog(@"=====pmd: %@ vmd: %@======", pmdfilepath, vmdfilepath);
+    NSLog(@"=====pmd_curr: %@ vmd_curr: %@======", self.pmdFilepath_curr, self.vmdFilepath_curr);
 	if ([pmdfilepath isEqualToString:self.pmdFilepath_curr]==NO 
 		|| [vmdfilepath isEqualToString:self.vmdFilepath_curr]==NO)
 	{
+        NSLog(@"=====Inside first if======");
 		if ([pmdfilepath isAbsolutePath]==NO
 			|| [[NSFileManager defaultManager] fileExistsAtPath:pmdfilepath]==NO) {
+            NSLog(@"=====Inside second if======");
 			self.pmdFilepath= self.pmdFilepath_curr;
 			return NO;
 		}
 		if ([vmdfilepath isAbsolutePath]==NO 
 			|| [[NSFileManager defaultManager] fileExistsAtPath:vmdfilepath]==NO) {
+            NSLog(@"=====Inside third if======");
 			self.vmdFilepath= self.vmdFilepath_curr;
 		}
 		return YES;
@@ -360,20 +379,41 @@
 		return NO; 
 	
 	BOOL noPhysicsFlag= NO;
-	if ([self isNeedReloadWithPmd:self.pmdFilepath
-							  vmd:self.vmdFilepath]==YES) 
+    /*
+     * Updated by: r1cebank
+     * Reason: Poor and messy code
+     */
+//	if ([self isNeedReloadWithPmd:self.pmdFilepath
+//							  vmd:self.vmdFilepath]==YES) 
+//	{
+//        NSLog(@"=====Reload with PMD=====");
+//		[self loadDataWithContext:context];
+//		g_clPMDModel.clearCurrentFrame();
+//        g_clPMDModel.enablePhysics(false);
+//        g_clPMDModel.resetRigidBodyPos();
+//        g_clPMDModel.updateMotion( 0.0f );
+//        g_clPMDModel.updateSkinning();
+//		noPhysicsFlag= YES;
+//	}
+    if([self.pmdFilepath_curr isEqualToString:self.pmdFilepath] == NO ||
+       [self.vmdFilepath_curr isEqualToString:self.vmdFilepath] == NO)
+    {
+        if((self.vmdFilepath != nil) || [self.vmdFilepath length]>0)
+        {
+            NSLog(@"=====Loading new resources=====");
+            [self loadDataWithContext:context];
+            g_clPMDModel.clearCurrentFrame();
+            g_clPMDModel.enablePhysics(false);
+            g_clPMDModel.resetRigidBodyPos();
+            g_clPMDModel.updateMotion( 0.0f );
+            g_clPMDModel.updateSkinning();
+            noPhysicsFlag= YES;
+        }
+    }
+    
+	if(loadedFlag)
 	{
-		[self loadDataWithContext:context];
-		g_clPMDModel.clearCurrentFrame();
-        g_clPMDModel.enablePhysics(false);
-        g_clPMDModel.resetRigidBodyPos();
-        g_clPMDModel.updateMotion( 0.0f );
-        g_clPMDModel.updateSkinning();
-		noPhysicsFlag= YES;
-	}
-	
-	if (loadedFlag) 
-	{
+        //NSLog(@"=====Loaded=====");
 		g_clPMDModel.setQCPlugInContext( context );
 		GLint saveMode;	
 		glGetIntegerv(GL_MATRIX_MODE, &saveMode);
