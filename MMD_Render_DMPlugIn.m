@@ -3,7 +3,7 @@
 #import "MMD_Render_DMPlugIn.h"
 
 #define	kQCPlugIn_Name				@"MMDRender"
-#define	kQCPlugIn_Description		@"PMD Render b123 / VMD Player using Quartz Composer"
+#define	kQCPlugIn_Description		@"PMD Render b124 / VMD Player using Quartz Composer"
 
 @implementation MMD_Render_DMPlugIn
 
@@ -255,6 +255,7 @@
 		}
 		
 		self.pmdFilepath_curr= pmdfilepath;
+        self.vmdFilepath_curr= vmdfilepath;
 		
 		g_clPMDModel.setQCPlugInContext( context );
 		g_clPMDModel.load( [pmdfilepath cStringUsingEncoding:NSUTF8StringEncoding] );
@@ -430,16 +431,18 @@
     }
     if([self.vmdFilepath_curr isEqualToString:self.vmdFilepath] == NO)
     {
-        NSLog(@"=====Loading new motion=====");
-        [self loadDataWithContext:context];
-        //[self loadMotion:self.vmdFilepath loop:YES];
-        g_clPMDModel.clearCurrentFrame();
-        g_clPMDModel.enablePhysics(false);
-        g_clPMDModel.resetRigidBodyPos();
-        g_clPMDModel.updateMotion( 0.0f );
-        g_clPMDModel.updateSkinning();
-        noPhysicsFlag= YES;
-
+        if([self.vmdFilepath isEqualToString:@""] != YES)
+        {
+            NSLog(@"=====Loading new motion=====");
+            [self loadDataWithContext:context];
+            //[self loadMotion:self.vmdFilepath loop:YES];
+            g_clPMDModel.clearCurrentFrame();
+            g_clPMDModel.enablePhysics(false);
+            g_clPMDModel.resetRigidBodyPos();
+            g_clPMDModel.updateMotion( 0.0f );
+            g_clPMDModel.updateSkinning();
+            noPhysicsFlag= YES;
+        }
     }
     
 	if(loadedFlag)
